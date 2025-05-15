@@ -1,12 +1,18 @@
-const products = require('../data/products');
+// backend/controllers/productController.js
+const Product = require('../models/Product');
 
 // Get all products
-const getProducts = (req, res) => {
-  res.json(products);
+const getProducts = async (req, res) => {
+  try {
+    const products = await Product.find({});
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
 };
 
 // Add a new product
-const addProduct = (req, res) => {
+const addProduct = async (req, res) => {
   const { name, price } = req.body;
 
   if (!name || typeof name !== 'string' || name.trim() === '') {
@@ -17,39 +23,37 @@ const addProduct = (req, res) => {
     return res.status(400).json({ message: 'Price is required and must be a positive number' });
   }
 
-  const cleanName = name.trim();
-
-  const newProduct = {
-    id: products.length > 0 ? products[products.length - 1].id + 1 : 1,
-    name: cleanName,
-    price,
-  };
-
-  products.push(newProduct);
-
-  res.status(201).json(newProduct);
+  try {
+    const newProduct = new Product({ name: name.trim(), price });
+    const savedProduct = await newProduct.save();
+    res.status(201).json(savedProduct);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
 };
 
-// Update product by ID (using array)
-const updateProduct = (req, res) => {
-  const productId = parseInt(req.params.id);
+// Update product by ID
+const updateProduct = async (req, res) => {
+  const productId = req.params.id;
   const { name, price } = req.body;
 
-  const product = products.find(p => p.id === productId);
+  try {
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
 
-  if (!product) {
-    return res.status(404).json({ message: 'Product not found' });
+    if (name && typeof name === 'string' && name.trim() !== '') {
+      product.name = name.trim();
+    }
+
+    if (price && typeof price === 'number' && price > 0) {
+      product.price = price;
+    }
+
+    const updatedProduct = await product.save();
+    res.json(updatedProduct);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
   }
-
-  if (name && typeof name === 'string' && name.trim() !== '') {
-    product.name = name.trim();
-  }
-
-  if (price && typeof price === 'number' && price > 0) {
-    product.price = price;
-  }
-
-  res.json(product);
 };
 
 module.exports = { getProducts, addProduct, updateProduct };

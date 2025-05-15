@@ -1,22 +1,25 @@
 const express = require('express');
-const app = express();
-const productRoutes = require('./routes/productRoutes');
 const mongoose = require('mongoose');
+const productRoutes = require('./routes/productRoutes');
 
+const app = express();
+const PORT = 5000;
+
+// Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/goldmart', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
 .then(() => console.log('MongoDB connected'))
 .catch((err) => console.error('MongoDB connection error:', err));
-// Middleware (optional)
+
+// Middleware to parse JSON bodies
 app.use(express.json());
 
-// Routes
+// Product routes
 app.use('/api/products', productRoutes);
 
-// Server running
-const PORT = 5000;
+// Start server
 app.listen(PORT, () => {
   console.log(`GoldMart backend running on http://localhost:${PORT}`);
 });
