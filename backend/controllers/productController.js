@@ -1,9 +1,11 @@
 const products = require('../data/products');
 
+// Get all products
 const getProducts = (req, res) => {
   res.json(products);
 };
 
+// Add a new product
 const addProduct = (req, res) => {
   const { name, price } = req.body;
 
@@ -28,4 +30,26 @@ const addProduct = (req, res) => {
   res.status(201).json(newProduct);
 };
 
-module.exports = { getProducts, addProduct };
+// Update product by ID (using array)
+const updateProduct = (req, res) => {
+  const productId = parseInt(req.params.id);
+  const { name, price } = req.body;
+
+  const product = products.find(p => p.id === productId);
+
+  if (!product) {
+    return res.status(404).json({ message: 'Product not found' });
+  }
+
+  if (name && typeof name === 'string' && name.trim() !== '') {
+    product.name = name.trim();
+  }
+
+  if (price && typeof price === 'number' && price > 0) {
+    product.price = price;
+  }
+
+  res.json(product);
+};
+
+module.exports = { getProducts, addProduct, updateProduct };
