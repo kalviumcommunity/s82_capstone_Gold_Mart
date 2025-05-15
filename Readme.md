@@ -66,3 +66,4 @@ Day 7	Final Touches & Testing	- Add chat preview
 - Test all features
 - Deploy (if possible)	Fully working MVP, ready for presentation or testing
 
+/*****rgo*/
