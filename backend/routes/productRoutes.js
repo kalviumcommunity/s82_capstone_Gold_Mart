@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { getProducts } = require('../controllers/productController');
 
-// GET all products
+// Import both functions from productController
+const { getProducts, addProduct } = require('../controllers/productController');
+
 router.get('/', getProducts);
+router.post('/', addProduct);
 
 module.exports = router;
