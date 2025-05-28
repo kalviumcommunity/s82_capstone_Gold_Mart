@@ -1,15 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const Product = require('./Product'); // Ensure this model exists
+const mongoose = require('mongoose');
 
-router.post('/products', async (req, res) => {
-  try {
-    const newProduct = new Product(req.body);
-    const saved = await newProduct.save();
-    res.status(201).json(saved);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to add product' });
-  }
+const productSchema = new mongoose.Schema({
+  name: { type: String, required: true, trim: true },
+  price: { type: Number, required: true, min: 0 },
 });
 
-module.exports = router;
+const Product = mongoose.model('Product', productSchema);
+
+module.exports = Product;
