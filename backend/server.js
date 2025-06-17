@@ -4,6 +4,9 @@ const productRoutes = require('./routes/productRoutes');
 
 const app = express();
 const PORT = 5000;
+const uploadRoute = require('./routes/uploadRoute');
+app.use('/api', uploadRoute);
+app.use('/uploads', express.static('uploads'));
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/goldmart', {
