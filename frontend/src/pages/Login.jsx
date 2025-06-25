@@ -19,7 +19,7 @@ const Login = () => {
           Don't have an account?{" "}
           <span onClick={() => navigate("/signup")}>Signup</span>
         </p>
-        <p className="forgot" onClick={() => navigate("/forgot-password")}>
+        <p className="Forgot" onClick={() => navigate("/forgot-password")}>
   Forgot password?
 </p>
 
