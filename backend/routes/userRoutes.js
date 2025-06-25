@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User'); // Adjust path
+const User = require('../models/user'); // Adjust path
 
 // GET all users
 router.get('/', async (req, res) => {

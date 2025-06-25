@@ -1,35 +1,38 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const productRoutes = require('./routes/productRoutes');
+const session = require('express-session');
+const passport = require('passport');
+const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+
 const app = express();
-const PORT = 5000;
-const uploadRoute = require('./routes/uploadRoute');
-app.use('/api', uploadRoute);
-app.use('/uploads', express.static('uploads'));
+
+// Load environment variables
+dotenv.config();
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/goldmart', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch((err) => console.error('MongoDB connection error:', err));
 connectDB();
 
 // Middleware
 app.use(express.json());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'defaultsecret',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Routes
-const itemRoutes = require('./routes/itemRoutes');
-app.use('/api/items', itemRoutes);
-// Middleware to parse JSON bodies
-app.use(express.json());
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/products', require('./routes/productRoutes'));
 
-// Product routes
-app.use('/api/products', productRoutes);
+// Base route
+app.get('/', (req, res) => {
+  res.send('GoldMart Backend API Running ✅');
+});
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`GoldMart backend running on http://localhost:${PORT}`);
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

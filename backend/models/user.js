@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  password: { type: String }, // Not needed if only using Google OAuth
+  googleId: { type: String }, // For OAuth
+  name: { type: String },
+  resetToken: { type: String },
+  resetTokenExpiry: { type: Date }
 });
 
 module.exports = mongoose.model('User', userSchema);
