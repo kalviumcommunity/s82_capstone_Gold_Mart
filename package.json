@@ -2,6 +2,7 @@
   "dependencies": {
     "@babel/code-frame": "^7.27.1",
     "express-session": "^1.18.1",
+    "firebase": "^11.9.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.3",
     "multer": "^2.0.1",
