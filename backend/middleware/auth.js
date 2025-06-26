@@ -17,5 +17,14 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  // Replace with real authentication
+  if (username === 'admin' && password === '1234') {
+    res.send({ success: true });
+  } else {
+    res.status(401).send({ success: false });
+  }
+});
 
 module.exports = { generateToken, authenticateToken };
